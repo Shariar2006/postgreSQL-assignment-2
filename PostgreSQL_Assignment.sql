@@ -11,12 +11,12 @@ CREATE Table rangers (
 INSERT INTO
     rangers (name, region)
 VALUES (
-        'Alice Green',
+        'Shariar',
         'Northern Hills'
     ),
-    ('Bob White', 'River Delta'),
+    ('Nafis', 'River Delta'),
     (
-        'Carol King',
+        'Emon',
         'Mountain Range'
     );
 
@@ -37,31 +37,33 @@ INSERT INTO
         discovery_date,
         conservation_status
     )
-VALUES (
-        'Bengal Tiger',
-        'Panthera tigris',
-        '1758-01-01',
+VALUES
+ (
+        'golden toad',
+        'Incilius periglenes',
+        '1958-01-01',
         'Endangered'
     ),
-    (
-        'Red Panda',
-        'Ailurus fulgens',
-        '1825-01-01',
-        'Vulnerable'
-    ),
-    (
-        'Asiatic Elephant',
-        'Elephas maximus indicus',
-        '1758-01-01',
+ (
+        'Alaotra Grebe',
+        'Tachybaptus rufolavatus',
+        '1988-05-21',
         'Endangered'
-    );
+    ),
+ (
+        'Mountain Mist Frog',
+        'Litoria nyakalensis',
+        '2004-01-01',
+        'Endangered'
+    )
+    ;
 
 -- create sightings table
 CREATE Table sightings (
     sighting_id SERIAL PRIMARY KEY,
     ranger_id INTEGER REFERENCES rangers (ranger_id) on delete CASCADE,
     species_id INTEGER REFERENCES species (species_id) on delete CASCADE,
-    sighting_time DATE,
+    sighting_time TIMESTAMP,
     location VARCHAR(30) NOT NULL,
     notes VARCHAR(255)
 );
@@ -77,25 +79,11 @@ INSERT INTO
     )
 VALUES 
     (
-        2,
-        2,
-        'Snowfall pass Snowfall',
-        '2024-05-12 16:20:00',
-        'Juvenile seen'
-    ),
-    (
+        5,
         4,
-        3,
-        'Pass Snowfall',
-        '2024-05-15 09:10:00',
-        'Feeding observed'
-    ),
-    (
-        1,
-        2,
-        'Snowfall Pass',
-        '2024-05-18 18:30:00',
-        NULL
+        'Snowfall pass Snowfall',
+        '2025-05-18 21:40:01',
+        'Juvenile seen'
     );
 
 SELECT * FROM rangers;
@@ -120,3 +108,11 @@ SELECT * FROM sightings
 SELECT name, count(*) as total_sightings  FROM rangers
     JOIN sightings ON rangers.ranger_id = sightings.ranger_id
     GROUP BY name;
+
+-- problem 5
+SELECT common_name FROM species
+    LEFT JOIN sightings ON species.species_id = sightings.species_id
+    WHERE sightings.species_id IS NULL;
+
+-- problem 6
+SELECT * FROM sightings ORDER BY sighting_time DESC LIMIT 2;
