@@ -75,24 +75,18 @@ INSERT INTO
         sighting_time,
         notes
     )
-VALUES (
-        1,
-        1,
-        'Peak Ridge',
-        '2024-05-10 07:45:00',
-        'Camera trap image captured'
-    ),
+VALUES 
     (
         2,
         2,
-        'Bankwood Area',
+        'Snowfall pass Snowfall',
         '2024-05-12 16:20:00',
         'Juvenile seen'
     ),
     (
+        4,
         3,
-        3,
-        'Bamboo Grove East',
+        'Pass Snowfall',
         '2024-05-15 09:10:00',
         'Feeding observed'
     ),
@@ -118,3 +112,11 @@ VALUES ('Derek Fox', 'Coastal Plains');
 -- problem 2
 SELECT count(DISTINCT common_name) as unique_species_count FROM species;
 
+-- problem 3
+SELECT * FROM sightings
+    WHERE location ILIKE('%Pass%');
+
+-- problem 4
+SELECT name, count(*) as total_sightings  FROM rangers
+    JOIN sightings ON rangers.ranger_id = sightings.ranger_id
+    GROUP BY name;
