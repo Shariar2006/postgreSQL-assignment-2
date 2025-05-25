@@ -10,13 +10,9 @@ CREATE Table rangers (
 -- insert rangers data
 INSERT INTO
     rangers (name, region)
-VALUES (
-        'Shariar',
-        'Northern Hills'
-    ),
-    ('Nafis', 'River Delta'),
+VALUES 
     (
-        'Emon',
+        'Limon',
         'Mountain Range'
     );
 
@@ -121,3 +117,17 @@ JOIN species ON sightings.species_id = species.species_id
  ORDER BY sighting_time DESC LIMIT 2;
 
 -- problem 7
+UPDATE species
+    set conservation_status = 'Historic'
+    WHERE extract(YEAR FROM discovery_date) < 1800;
+
+-- problem 8
+SELECT sighting_id, sighting_time FROM sightings
+LABEL
+;
+
+-- problem 9
+DELETE FROM rangers
+    WHERE ranger_id IN(SELECT rangers.ranger_id as r_id FROM rangers
+    LEFT JOIN sightings ON rangers.ranger_id = sightings.ranger_id
+    WHERE sightings.species_id IS NULL);
