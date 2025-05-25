@@ -115,4 +115,9 @@ SELECT common_name FROM species
     WHERE sightings.species_id IS NULL;
 
 -- problem 6
-SELECT * FROM sightings ORDER BY sighting_time DESC LIMIT 2;
+SELECT common_name, sighting_time, name FROM sightings
+JOIN rangers ON sightings.ranger_id = rangers.ranger_id
+JOIN species ON sightings.species_id = species.species_id
+ ORDER BY sighting_time DESC LIMIT 2;
+
+-- problem 7
