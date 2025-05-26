@@ -22,7 +22,7 @@ CREATE Table species (
     common_name VARCHAR(50) NOT NULL,
     scientific_name VARCHAR(50) NOT NULL,
     discovery_date DATE NOT NULL,
-    conservation_status VARCHAR(30) NOT NULL
+    conservation_status VARCHAR(30) NOT NULL CHECK (conservation_status IN ('Endangered', 'Vulnerable', 'Historic'))
 );
 
 -- insert species data
@@ -37,30 +37,17 @@ VALUES
  (
         'golden toad',
         'Incilius periglenes',
-        '1958-01-01',
+        '1758-01-01',
         'Endangered'
-    ),
- (
-        'Alaotra Grebe',
-        'Tachybaptus rufolavatus',
-        '1988-05-21',
-        'Endangered'
-    ),
- (
-        'Mountain Mist Frog',
-        'Litoria nyakalensis',
-        '2004-01-01',
-        'Endangered'
-    )
-    ;
+    );
 
 -- create sightings table
 CREATE Table sightings (
     sighting_id SERIAL PRIMARY KEY,
     ranger_id INTEGER REFERENCES rangers (ranger_id) on delete CASCADE,
     species_id INTEGER REFERENCES species (species_id) on delete CASCADE,
-    sighting_time TIMESTAMP,
-    location VARCHAR(30) NOT NULL,
+    sighting_time TIMESTAMP NOT NULL,
+    location VARCHAR(30),
     notes VARCHAR(255)
 );
 
@@ -122,12 +109,18 @@ UPDATE species
     WHERE extract(YEAR FROM discovery_date) < 1800;
 
 -- problem 8
-SELECT sighting_id, sighting_time FROM sightings
-LABEL
-;
+SELECT 
+  sighting_id,
+  CASE 
+    WHEN EXTRACT(HOUR FROM sighting_time) < 12 THEN 'Morning'
+    WHEN EXTRACT(HOUR FROM sighting_time) BETWEEN 12 AND 17 THEN 'Afternoon'
+    ELSE 'Evening'
+  END AS time_of_day
+FROM sightings;
+
 
 -- problem 9
 DELETE FROM rangers
-    WHERE ranger_id IN(SELECT rangers.ranger_id as r_id FROM rangers
+    WHERE ranger_id IN(SELECT rangers.ranger_id FROM rangers
     LEFT JOIN sightings ON rangers.ranger_id = sightings.ranger_id
     WHERE sightings.species_id IS NULL);
